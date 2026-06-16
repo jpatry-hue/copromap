@@ -63,40 +63,25 @@ Upstream APIs (all public, no keys): BAN/`api-adresse.data.gouv.fr` (geocode),
 DPE and permis convert the radius into a lat/lon bounding box using the
 `distance / 111320` degrees-per-metre approximation.
 
-## Known structural issue — read before touching routing
+## Routing / file layout
 
-The files in this repo were created through the GitHub web "Create file" UI, and
-the paths were progressively duplicated. The **on-disk layout does not match the
-routes the code assumes**. Only `pages/api/geocode.js` is in the right place;
-everything else is nested too deep:
+All files live at their intended flat locations under `pages/`, so Next.js serves
+the routes the code references:
 
 ```
-pages/api/geocode.js                                              → /api/geocode  ✅
-pages/api/pages/api/copro.js                                      → should be pages/api/copro.js
-pages/api/pages/api/pages/api/dvf.js                             → should be pages/api/dvf.js
-pages/api/.../dpe.js                                              → should be pages/api/dpe.js
-pages/api/.../georisques.js                                       → should be pages/api/georisques.js
-pages/api/.../permis.js                                           → should be pages/api/permis.js
-pages/api/.../pages/index.js                                      → should be pages/index.js
+pages/index.js          → /            (the Home page)
+pages/api/geocode.js     → /api/geocode
+pages/api/copro.js       → /api/copro
+pages/api/dvf.js         → /api/dvf
+pages/api/dpe.js         → /api/dpe
+pages/api/georisques.js  → /api/georisques
+pages/api/permis.js      → /api/permis
 ```
 
-The frontend fetches `/api/copro`, `/api/dvf`, `/api/dpe`, `/api/permis`,
-`/api/georisques`, and the home page is expected at `/`. With the current nesting,
-Next.js will not serve these at the expected URLs and the app will not work.
-
-The correct flat layout is:
-
-```
-pages/index.js          (the Home page)
-pages/api/geocode.js
-pages/api/copro.js
-pages/api/dvf.js
-pages/api/dpe.js
-pages/api/georisques.js
-pages/api/permis.js
-```
-
-When asked to "fix the app", "make it run", or work on routing, first move each
-file to its intended flat location (use `git mv`) and remove the empty nested
-`pages/api/pages/...` directories. The file *contents* are correct as written and
-already reference the flat route paths.
+Historical note: these files were originally created through the GitHub web
+"Create file" UI, which progressively duplicated the paths (e.g.
+`pages/api/pages/api/copro.js`) so nothing but `geocode.js` resolved to its
+expected URL and the app would not run. That nesting has been flattened. If you
+ever see a `pages/api/pages/...` path reappear, move the file back to its flat
+location (use `git mv`) and delete the empty nested directories — the file
+*contents* already reference the flat route paths.
