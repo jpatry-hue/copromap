@@ -73,7 +73,7 @@ export default function Home() {
         center:[48.8566,2.3522], zoom:13,
         zoomControl:false, attributionControl:false,
       })
-      L.current.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map)
+      L.current.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map)
       leafletMap.current = map
       SOURCES.forEach(s => { layerGroups.current[s.key] = L.current.layerGroup().addTo(map) })
     })
@@ -315,7 +315,7 @@ export default function Home() {
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
         :root{--bg:#060c1a;--surface:#0d1526;--surface2:#131f36;--border:rgba(255,255,255,0.08);--blue:#2563eb;--accent:#38bdf8;--success:#34d399;--warning:#fbbf24;--text:#e8eef8;--text-muted:#7a8ba8;--text-dim:#3d5070;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
         html,body{height:100dvh;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display',sans-serif}
-        .leaflet-tile-pane{filter:brightness(0.85) saturate(0.8) hue-rotate(200deg)}
+        .leaflet-tile-pane{filter:none}
         .leaflet-control-attribution,.leaflet-control-zoom{display:none}
         .topbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:calc(var(--safe-top) + 12px) 16px 12px;background:linear-gradient(to bottom,rgba(6,12,26,.98) 70%,transparent);display:flex;flex-direction:column;gap:10px}
         .brand{display:flex;align-items:center;gap:10px}
