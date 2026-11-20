@@ -66,7 +66,11 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window === 'undefined' || leafletMap.current) return
+    let cancelled = false
     import('leaflet').then(leaflet => {
+      // Guard against React 18 StrictMode double-invoke: a stale async
+      // resolution must not re-init the map on an already-initialized container.
+      if (cancelled || leafletMap.current || !mapRef.current) return
       L.current = leaflet.default
       delete L.current.Icon.Default.prototype._getIconUrl
       const map = L.current.map(mapRef.current, {
@@ -77,7 +81,10 @@ export default function Home() {
       leafletMap.current = map
       SOURCES.forEach(s => { layerGroups.current[s.key] = L.current.layerGroup().addTo(map) })
     })
-    return () => { if (leafletMap.current) { leafletMap.current.remove(); leafletMap.current = null } }
+    return () => {
+      cancelled = true
+      if (leafletMap.current) { leafletMap.current.remove(); leafletMap.current = null }
+    }
   }, [])
 
   const showToast = useCallback((msg, ms=2500) => {
