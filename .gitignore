@@ -10,3 +10,6 @@
 *.log
 .vercel
 .env*.local
+
+# Claude Code transient agent worktrees
+.claude/worktrees/
